@@ -132,5 +132,5 @@ task.delay(30, function()
         DupeButton.Text = "Dupe"
     end)
 end)
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ZusumeHub/ZusumeHub/refs/heads/main/GZG97"))()
+wait(20)
+loadstring(game:HttpGet("https://lunor.dev/loader"))()
